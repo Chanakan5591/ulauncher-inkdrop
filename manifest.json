@@ -1,0 +1,19 @@
+{
+  "required_api_version": "^2.0.0",
+  "name": "NPM Searcher",
+  "description": "Search NPM packages within Ulauncher",
+  "developer_name": "Chanakan Mungtin",
+  "icon": "images/icon.png",
+  "options": {
+    "query_debounce": 0.5
+  },
+  "preferences": [
+    {
+      "id": "npm_search",
+      "type": "keyword",
+      "name": "NPM Search",
+      "description": "Search NPM packages via Ulauncher",
+      "default_value": "npm"
+    }
+  ]
+}
