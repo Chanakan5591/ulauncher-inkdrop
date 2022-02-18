@@ -8,6 +8,8 @@ from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
 import requests
 import webbrowser
 
+def clamp(n, smallest, largest): return max(smallest, min(n, largest))
+
 class NPMSearch(Extension):
 
     def __init__(self):
@@ -38,8 +40,7 @@ class KeywordQueryEventListener(EventListener):
         response = requests.get(query).json()
 
 
-
-        for i in range(9):
+        for i in range(clamp(9, 0, len(response["results"]))):
             data = {'url': response["results"][i]["package"]["links"]["npm"]}
             items.append(ExtensionResultItem(icon='images/icon.png',
                                              name=response["results"][i]["package"]["name"] + "@" + response["results"][i]["package"]["version"],
