@@ -1,7 +1,7 @@
 {
   "required_api_version": "^2.0.0",
-  "name": "NPM Searcher",
-  "description": "Search NPM packages within Ulauncher",
+  "name": "Inkdrop",
+  "description": "Search Inkdrop Notes with Ulauncher",
   "developer_name": "Chanakan Mungtin",
   "icon": "images/icon.png",
   "options": {
@@ -9,11 +9,37 @@
   },
   "preferences": [
     {
-      "id": "npm_search",
+      "id": "inkdrop_keyword",
       "type": "keyword",
-      "name": "NPM Search",
-      "description": "Search NPM packages via Ulauncher",
-      "default_value": "npm"
+      "name": "Inkdrop Keyword",
+      "description": "Keyword to use this extension in ulauncher",
+      "default_value": "ink"
+    },
+    {
+      "id": "inkdrop_host",
+      "type": "input",
+      "name": "Host",
+      "description": "Inkdrop Host defined in the configuration file",
+      "default_value": "localhost"
+    },
+    {
+      "id": "inkdrop_port",
+      "type": "input",
+      "name": "Port",
+      "description": "Inkdrop Port defined in the configuration file",
+      "default_value": "19840"
+    },
+    {
+      "id": "inkdrop_username",
+      "type": "input",
+      "name": "Username",
+      "description": "Username specified in Inkdrop configuration file"
+    },
+    {
+      "id": "inkdrop_password",
+      "type": "input",
+      "name": "Password",
+      "description": "Password specified in Inkdrop configuration file"
     }
   ]
 }

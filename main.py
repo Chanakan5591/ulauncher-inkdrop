@@ -10,7 +10,7 @@ import webbrowser
 
 def clamp(n, smallest, largest): return max(smallest, min(n, largest))
 
-class NPMSearch(Extension):
+class Inkdrop(Extension):
 
     def __init__(self):
         super().__init__()
@@ -22,10 +22,10 @@ class ItemEnterEventListener(EventListener):
     def on_event(self, event, extension):
         # event is instance of ItemEnterEvent
 
-        data = event.get_data()
+        data = event.get_data()['noteId']
 
         # do additional actions here...
-        webbrowser.open_new_tab(data['url'])
+        webbrowser.open_new_tab('inkdrop://' + data.replace(':', '/'))
 
         return RenderResultListAction([])
 
@@ -34,20 +34,25 @@ class KeywordQueryEventListener(EventListener):
 
     def on_event(self, event, extension):
         items = []
-
-        packages = event.query.split(" ")[1]
-        query = "https://api.npms.io/v2/search?q={}".format(packages)
+        prefs = extension.preferences
+        noteKeyword = event.query.split(" ")[1]
+        url = "http://{}:{}@{}:{}".format(prefs['inkdrop_username'], prefs['inkdrop_password'], prefs['inkdrop_host'], prefs['inkdrop_port'])
+        query = url + "/notes?limit=20&keyword={}".format(noteKeyword)
         response = requests.get(query).json()
 
-
-        for i in range(clamp(9, 0, len(response["results"]))):
-            data = {'url': response["results"][i]["package"]["links"]["npm"]}
+        for i in range(clamp(9, 0, len(response))):
+            print(response[i])
+            bookQ = url + "/books"
+            res = requests.get(bookQ).json()
+            book = [item for item in res if item.get('_id') == response[i]["bookId"]][0]['name']
+            data = {'noteId': response[i]["_id"]}
+            print(response[i])
             items.append(ExtensionResultItem(icon='images/icon.png',
-                                             name=response["results"][i]["package"]["name"] + "@" + response["results"][i]["package"]["version"],
-                                             description=response["results"][i]["package"]["description"],
+                                             name=response[i]["title"],
+                                             description=book,
                                              on_enter=ExtensionCustomAction(data, keep_app_open=False)))
 
         return RenderResultListAction(items)
 
 if __name__ == '__main__':
-    NPMSearch().run()
+    Inkdrop().run()
