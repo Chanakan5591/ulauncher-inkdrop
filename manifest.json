@@ -11,7 +11,7 @@
     {
       "id": "inkdrop_keyword",
       "type": "keyword",
-      "name": "Inkdrop Keyword",
+      "name": "Inkdrop",
       "description": "Keyword to use this extension in ulauncher",
       "default_value": "ink"
     },
