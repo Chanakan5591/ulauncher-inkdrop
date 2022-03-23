@@ -41,12 +41,10 @@ class KeywordQueryEventListener(EventListener):
         response = requests.get(query).json()
 
         for i in range(clamp(9, 0, len(response))):
-            print(response[i])
             bookQ = url + "/books"
             res = requests.get(bookQ).json()
             book = [item for item in res if item.get('_id') == response[i]["bookId"]][0]['name']
             data = {'noteId': response[i]["_id"]}
-            print(response[i])
             items.append(ExtensionResultItem(icon='images/icon.png',
                                              name=response[i]["title"],
                                              description=book,
