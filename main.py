@@ -4,11 +4,13 @@ from ulauncher.api.shared.action.ExtensionCustomAction import ExtensionCustomAct
 from ulauncher.api.shared.event import KeywordQueryEvent, ItemEnterEvent
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
-from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
 import requests
 import webbrowser
 
-def clamp(n, smallest, largest): return max(smallest, min(n, largest))
+
+def clamp(n, smallest, largest):
+    return max(smallest, min(n, largest))
+
 
 class Inkdrop(Extension):
 
@@ -17,14 +19,17 @@ class Inkdrop(Extension):
         self.subscribe(KeywordQueryEvent, KeywordQueryEventListener())
         self.subscribe(ItemEnterEvent, ItemEnterEventListener())
 
+
 class ItemEnterEventListener(EventListener):
 
     def on_event(self, event, extension):
+
         # event is instance of ItemEnterEvent
 
         data = event.get_data()['noteId']
 
         # do additional actions here...
+
         webbrowser.open_new_tab('inkdrop://' + data.replace(':', '/'))
 
         return RenderResultListAction([])
@@ -35,22 +40,30 @@ class KeywordQueryEventListener(EventListener):
     def on_event(self, event, extension):
         items = []
         prefs = extension.preferences
-        noteKeyword = event.query.split(" ")[1]
-        url = "http://{}:{}@{}:{}".format(prefs['inkdrop_username'], prefs['inkdrop_password'], prefs['inkdrop_host'], prefs['inkdrop_port'])
-        query = url + "/notes?limit=20&keyword={}".format(noteKeyword)
+        noteKeyword = event.query.split(' ').shift().join(' ')
+        print(noteKeyword)
+        url = 'http://{}:{}@{}:{}'.format(prefs['inkdrop_username'],
+                                          prefs['inkdrop_password'],
+                                          prefs['inkdrop_host'],
+                                          prefs['inkdrop_port'])
+        query = url + '/notes?limit=20&keyword={}'.format(noteKeyword)
         response = requests.get(query).json()
 
         for i in range(clamp(9, 0, len(response))):
-            bookQ = url + "/books"
+            bookQ = url + '/books'
             res = requests.get(bookQ).json()
-            book = [item for item in res if item.get('_id') == response[i]["bookId"]][0]['name']
-            data = {'noteId': response[i]["_id"]}
+            book = [item for item in res if item.get('_id')
+                    == response[i]['bookId']][0]['name']
+            data = {'noteId': response[i]['_id']}
             items.append(ExtensionResultItem(icon='images/icon.png',
-                                             name=response[i]["title"],
+                                             name=response[i]['title'],
                                              description=book,
-                                             on_enter=ExtensionCustomAction(data, keep_app_open=False)))
+                                             on_enter=ExtensionCustomAction(
+                                                 data,
+                                                 keep_app_open=False)))
 
         return RenderResultListAction(items)
+
 
 if __name__ == '__main__':
     Inkdrop().run()
