@@ -40,7 +40,12 @@ class KeywordQueryEventListener(EventListener):
     def on_event(self, event, extension):
         items = []
         prefs = extension.preferences
-        noteKeyword = event.query.split(' ').slice(1).join(' ')
+        wordList = event.query.split(' ')
+
+        del wordList[0]
+        noteKeyword = ' '
+
+        noteKeyword = noteKeyword.join(wordList)
         print(noteKeyword)
         url = 'http://{}:{}@{}:{}'.format(prefs['inkdrop_username'],
                                           prefs['inkdrop_password'],
